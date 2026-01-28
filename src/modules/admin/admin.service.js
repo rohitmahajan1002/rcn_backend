@@ -1,13 +1,18 @@
 import Organization from "../organization/organization.model.js";
 import User from "../user/user.model.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { env } from "../../config/env.js";
 
 const ORGANIZATION_PASSWORD = 'password123';
 const SALT_AMOUNT = 10;
 const ORGANIZATION_ROLE = 4;
+const ADMIN_ROLE = 1;
 const DEFAULT_STATUS = 1;
 
-
+/**
+ * Service to create organization along with user
+ */
 export const createOrganizationService = async(payload) => {
     const companyPayload = {
         name: payload.name,
@@ -44,14 +49,20 @@ export const createOrganizationService = async(payload) => {
 
     const user = await User.create(userPayload);
 
+    const userObj = user.toObject();
+    delete userObj.password;
+
     return {
-        user: {
-            ...user.toObject(),
+        organization: {
+            ...userObj,
             organization_id: organization,
         },
     };
 }
 
+/**
+ * service to get organization list
+ */
 export const organizationListService = async() => {
     const organizations = await User.find(
         {
@@ -62,6 +73,9 @@ export const organizationListService = async() => {
     return organizations;
 }
 
+/**
+ * service to get organization by id
+ */
 export const organizationByIdService = async(id) => {
     const organization = await User.findOne(
         {
@@ -76,6 +90,10 @@ export const organizationByIdService = async(id) => {
 
     return organization;
 }
+
+/**
+ * service to delete organization
+ */
 
 export const deleteOrganizationService = async(id) => {
     const user = await User.findById(id);
@@ -92,6 +110,10 @@ export const deleteOrganizationService = async(id) => {
 
     return { success: true };
 }
+
+/**
+ * service to update organization
+ */
 
 export const updateOrganizationService = async(id, payload) => {
     const user = await User.findById(id);
@@ -140,4 +162,61 @@ export const updateOrganizationService = async(id, payload) => {
         organization_id: organization,
         },
     };
+}
+
+/**
+ * service to login admin
+ */
+export const adminLoginService = async(email, password) => {
+    const admin = await User.findOne(
+        { 
+            email, 
+            role_id: ADMIN_ROLE 
+        }
+    ).select('+password');
+
+    if (!admin) {
+        throw new Error('Invalid Email or Password');
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, admin.password);
+    if (!isPasswordValid) {
+        throw new Error('Invalid Email or Password');
+    }
+
+    const accessToken = jwt.sign(
+        { 
+            id: admin._id, 
+            email: admin.email, 
+            role_id: admin.role_id, 
+            status: admin.status 
+        },
+        env.jwtAccessSecret,
+        { 
+            expiresIn: env.jwtAccessExpiresIn 
+        }
+    );
+
+    const refreshToken = jwt.sign(
+        { 
+            id: admin._id, 
+            email: admin.email, 
+            role_id: admin.role_id, 
+            status: admin.status 
+        },
+        env.jwtRefreshSecret,
+        { 
+            expiresIn: env.jwtRefreshExpiresIn 
+        }
+    );
+
+    const adminObj = admin.toObject();
+    delete adminObj.password;
+
+    return {
+        accessToken,
+        refreshToken,
+        admin: adminObj 
+    }
+
 }

@@ -5,10 +5,13 @@ import {
     organizationListService,
     organizationByIdService,
     deleteOrganizationService,
-    updateOrganizationService
+    updateOrganizationService,
+    adminLoginService
 } from "./admin.service.js";
-import Organization from "../organization/organization.model.js";
 
+/**
+ * create organization
+ */
 export const createOrganization = asyncHandler(async(req, res) => {
     const organizationUser = await createOrganizationService(req.body);
 
@@ -21,6 +24,9 @@ export const createOrganization = asyncHandler(async(req, res) => {
     );
 });
 
+/**
+ * get organization list
+ */
 export const getOrganizationList = asyncHandler(async(req, res) => {
     const organizationList = await organizationListService();
 
@@ -30,6 +36,9 @@ export const getOrganizationList = asyncHandler(async(req, res) => {
     });
 });
 
+/**
+ * get organization by id
+ */
 export const getOrganizationById = asyncHandler(async(req, res) => {
     const organization = await organizationByIdService(req.params.id);
 
@@ -39,6 +48,9 @@ export const getOrganizationById = asyncHandler(async(req, res) => {
     });
 });
 
+/**
+ * delete organization
+ */
 export const deleteOrganization = asyncHandler(async(req, res) => {
     const deleteOrganization = await deleteOrganizationService(req.params.id);
 
@@ -47,6 +59,9 @@ export const deleteOrganization = asyncHandler(async(req, res) => {
     });
 });
 
+/**
+ * update organization
+ */
 export const updateOrganization = asyncHandler(async(req, res) => {
     const organization = await updateOrganizationService(req.params.id, req.body);
 
@@ -54,4 +69,20 @@ export const updateOrganization = asyncHandler(async(req, res) => {
         message: "Organization Updated Successfully",
         data: organization
     });
+});
+
+/**
+ * login admin
+ */
+export const adminLogin = asyncHandler(async(req, res) => {
+    const {email, password} = req.body;
+    const adminWithToken = await adminLoginService(email, password);
+
+    successResponse(
+        res,
+        {
+            message: "Admin logged in successfully",
+            data: adminWithToken
+        }
+    );
 });

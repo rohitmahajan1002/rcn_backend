@@ -38,6 +38,17 @@ export const organizationIdSchema = z.object({
 });
 
 /**
+ * signin validation
+ */
+
+export const organizationLoginSchema = z.object({
+  body: z.object({
+    email: z.string().email("Invalid email address of Organization"),
+    password: z.string().nonempty("Password is required")
+  }),
+});
+
+/**
  * Update organization schema
  */
 

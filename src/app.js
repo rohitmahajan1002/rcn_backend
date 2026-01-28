@@ -12,6 +12,7 @@ import notFound from "./middlewares/notFound.middleware.js";
 import userRoutes from "./modules/user/user.route.js";
 import AuthRoutes from "./modules/auth/auth.routes.js";
 import AdminRoutes from "./modules/admin/admin.route.js";
+import OrganizationRoutes from "./modules/organization/organization.route.js";
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.get('/health', (req, res) => {
 app.use('/api/users', userRoutes);
 app.use('/api/auth', AuthRoutes);
 app.use('/api/admin', AdminRoutes);
+app.use('/api/organization', OrganizationRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

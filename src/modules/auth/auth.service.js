@@ -4,12 +4,15 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt"; 
 import { userResponse } from "../user/user.response.js";
 
+const USER_ROLE = 3; 
+
 /**
  * service to login the user
  */
 export const loginService = async({email,password}) => {
     const user = await User.findOne({
-        email: email
+        email: email,
+        role_id: USER_ROLE
     }).select("+password");
 
     if(!user) {
@@ -54,10 +57,13 @@ export const loginService = async({email,password}) => {
         }
     );
 
+    const userObj = user.toObject();
+    delete userObj.password;
+
     return {
         refreshToken,
         accessToken,
-        user: userResponse(user)
+        user: userObj
     }
 };
 
@@ -102,4 +108,20 @@ export const refreshTokenService = async({refresh_token}) => {
     return {
         access_token: newAccessToken
     };
+}
+
+/**
+ * get user profile service
+ */
+export const getUserProfileService = async(authorizeToken) => {
+    const token = authorizeToken.split(" ")[1];
+
+    const decoded = jwt.verify(
+        token,
+        env.jwtAccessSecret
+    );
+
+    const user = await User.findById(decoded.id).populate('organization_id');
+
+    return user;
 }

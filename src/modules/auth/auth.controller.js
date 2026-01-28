@@ -1,6 +1,10 @@
 import asyncHandler from "../../middlewares/async.middleware.js";
 import { successResponse } from "../../utils/response.js";
-import { loginService, refreshTokenService } from "./auth.service.js";
+import { 
+    loginService, 
+    refreshTokenService,
+    getUserProfileService 
+} from "./auth.service.js";
 
 
 /**
@@ -31,4 +35,33 @@ export const refreshToken = asyncHandler(async(req, res) => {
             data: refreshToken
         }
     );
+});
+
+
+/**
+ * logout all the users
+ */
+export const logoutUser = asyncHandler(async(req, res) => {
+    successResponse(
+        res,
+        {
+            message: "User logged out successfully"
+        }
+    );
+});
+
+/**
+ * get user profile
+ */
+export const getUserProfile = asyncHandler(async(req, res) => {
+    const profileDetail = await getUserProfileService(req.headers.authorization);
+
+    successResponse(
+        res,
+        {
+            message: "User profile fetched successfully",
+            data: profileDetail
+        }
+    );
+
 });

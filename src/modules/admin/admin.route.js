@@ -10,16 +10,27 @@ import {
     updateOrganizationSchema
 } from "../organization/organization.validate.js";
 
+import { adminLoginSchema } from "./admin.validate.js";
+
 import { 
     createOrganization,
     getOrganizationList,
     getOrganizationById,
     deleteOrganization,
-    updateOrganization
+    updateOrganization,
+    adminLogin
 } from "./admin.controller.js";
 
 const router = new Router();
 
+/**
+ * Public Routes
+ */
+router.post('/login', validate(adminLoginSchema), adminLogin);
+
+/**
+ * Protected Routes
+ */
 router.use(authenticate);
 router.use(loadPermission);
 

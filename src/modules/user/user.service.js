@@ -15,7 +15,7 @@ const DEAFULT_STATUS = 1;
  * @param {*} payload 
  * @returns created user
  */
-export const createUserService = async(payload) => {
+export const createUserService = async(payload, organizationId = null) => {
 
     const plainPassword = payload.password || DEFAULT_PASSWORD;
 
@@ -28,8 +28,16 @@ export const createUserService = async(payload) => {
         status: DEAFULT_STATUS
     }
 
+    if (organizationId) {
+        userData.organization_id = organizationId;
+    }
+
     const user = await User.create(userData);
-    return user;
+    const userObj = user.toObject();
+    delete userObj.password;
+    return {
+        user: userObj
+    };
 }
 
 /**
