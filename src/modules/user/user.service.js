@@ -35,9 +35,7 @@ export const createUserService = async(payload, organizationId = null) => {
     const user = await User.create(userData);
     const userObj = user.toObject();
     delete userObj.password;
-    return {
-        user: userObj
-    };
+    return userObj;
 }
 
 /**
@@ -76,9 +74,6 @@ export const updateUserService = async(id, payload) => {
     return User.findOneAndUpdate(
         {
             _id: id,
-            status: {
-                $ne: 3
-            }
         },
         payload,
         {

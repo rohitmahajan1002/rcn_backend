@@ -23,6 +23,16 @@ const PERMISSIONS = [
   { key: "org.user.update", description: "Update organization user" },
   { key: "org.user.delete", description: "Delete organization user" },
 
+  { key: "org.branch.create", description: "Create organization branch" },
+  { key: "org.branch.read", description: "Read organization branch" },
+  { key: "org.branch.update", description: "Update organization branch" },
+  { key: "org.branch.delete", description: "Delete organization branch" },
+
+  { key: "org.department.create", description: "Create organization department" },
+  { key: "org.department.read", description: "Read organization department" },
+  { key: "org.department.update", description: "Update organization department" },
+  { key: "org.department.delete", description: "Delete organization department" },
+
 ];
 
 
@@ -67,6 +77,14 @@ const ROLE_PERMISSION_MAP = {
     "org.user.read",
     "org.user.update",
     "org.user.delete",
+    "org.branch.create",
+    "org.branch.read",
+    "org.branch.update",
+    "org.branch.delete",
+    "org.department.create",
+    "org.department.read",
+    "org.department.update",
+    "org.department.delete",
   ]
 };
 

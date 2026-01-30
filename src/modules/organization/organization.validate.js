@@ -51,7 +51,6 @@ export const organizationLoginSchema = z.object({
 /**
  * Update organization schema
  */
-
 export const updateOrganizationSchema = z.object({
   params: z.object({
     id: z.string().min(1, "User ID is required"),
@@ -95,5 +94,67 @@ export const updateOrganizationSchema = z.object({
   // Prevent empty update body
   .refine((data) => Object.keys(data).length > 0, {
     message: "At least one field must be provided for update",
+  }),
+});
+
+/**
+ * create branch schema
+ */
+export const createBranchSchema = z.object({
+  body: z.object({
+    name: z.string().min(1, "Branch name is required"),
+  }),
+});
+
+/**
+ * get branch by ID schema
+ */
+export const getBranchByIDSchema = z.object({
+  params: z.object({
+    id: z.string().min(1, "Branch ID is required"),
+  }),
+});
+
+/**
+ * get department by ID schema
+ */
+export const getDepartmentByIDSchema = z.object({
+  params: z.object({
+    id: z.string().min(1, "Department ID is required"),
+  }),
+});
+
+/**
+ * update branch schema
+ */
+export const updateBranchSchema = z.object({
+  params: z.object({
+    id: z.string().min(1, "Branch ID is required"),
+  }),
+  body: z.object({
+    name: z.string().min(1, "Branch name is required"),
+  }),
+});
+
+/**
+ * create department schema
+ */
+export const createDepartmentSchema = z.object({
+  body: z.object({
+    branch_id: z.string().min(1, "Branch ID is required"),
+    name: z.string().min(1, "Department name is required"),
+  }),
+});
+
+/**
+ * update department schema
+ */
+export const updateDepartmentSchema = z.object({
+  params: z.object({
+    id: z.string().min(1, "Department ID is required"),
+  }),
+  body: z.object({
+    branch_id: z.string().min(1, "Branch ID is required"),
+    name: z.string().min(1, "Department name is required"),
   }),
 });
